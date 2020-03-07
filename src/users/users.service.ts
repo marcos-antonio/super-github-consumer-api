@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+
 import { User } from './user';
+import { Repo } from '../repos/repo';
 
 @Injectable()
 export class UsersService {
@@ -61,6 +63,27 @@ export class UsersService {
     }),
   ];
 
+  private usersRepos: Repo[] = [
+    new Repo({
+      id: 132935648,
+      name: 'boysenberry-repo-1',
+      htmlUrl: 'https://github.com/octocat/boysenberry-repo-1',
+      owner: new User({ id: 583231, login: 'octocat' }),
+    }),
+    new Repo({
+      id: 18221276,
+      name: 'git-consortium',
+      htmlUrl: 'https://github.com/octocat/git-consortium',
+      owner: new User({ id: 583231, login: 'octocat' }),
+    }),
+    new Repo({
+      id: 20978623,
+      name: 'hello-worId',
+      htmlUrl: 'https://github.com/octocat/hello-worId',
+      owner: new User({ id: 583231, login: 'octocat' }),
+    }),
+  ];
+
   getAll(since?: number): User[] {
     return this.usersList
       .filter((u, i) => {
@@ -72,5 +95,9 @@ export class UsersService {
 
   getByLogin(login: string): User {
     return this.usersList.find(u => u.login === login);
+  }
+
+  getUserRepos(login: string): Repo[] {
+    return this.usersRepos.filter(r => r.owner.login === login);
   }
 }

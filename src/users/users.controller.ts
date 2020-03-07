@@ -11,6 +11,7 @@ import { Request } from 'express';
 
 import { UsersService } from './users.service';
 import { User } from './user';
+import { Repo } from '../repos/repo';
 
 @Controller('users')
 export class UsersController {
@@ -42,5 +43,10 @@ export class UsersController {
         HttpStatus.NOT_FOUND,
       );
     return user;
+  }
+
+  @Get(':username/repos')
+  getUserRepos(@Param('username') login: string): Repo[] {
+    return this.service.getUserRepos(login);
   }
 }
