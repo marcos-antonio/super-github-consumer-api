@@ -69,4 +69,8 @@ export class UsersService {
       })
       .slice(0, 5);
   }
+
+  getByLogin(login: string): User {
+    return this.usersList.find(u => u.login === login);
+  }
 }

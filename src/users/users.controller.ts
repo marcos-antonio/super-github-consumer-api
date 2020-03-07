@@ -1,7 +1,16 @@
-import { Controller, Get, Query, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Req,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Request } from 'express';
 
 import { UsersService } from './users.service';
+import { User } from './user';
 
 @Controller('users')
 export class UsersController {
@@ -19,5 +28,19 @@ export class UsersController {
     if (host === 'localhost') host += ':3001';
     if (!since) return `<${host}/users/(?since)>; rel="first"`;
     return `<${host}/users?since=${since}; rel="next", <${host}/users/(?since)>; rel="first"`;
+  }
+
+  @Get(':username/details')
+  getUser(@Param('username') login: string): User {
+    const user = this.service.getByLogin(login);
+    if (!user)
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `User ${login} not found!`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    return user;
   }
 }
