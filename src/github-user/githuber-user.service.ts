@@ -10,19 +10,15 @@ export class GithubUserService {
 
   getAll(since: number): Observable<GithubUser[]> {
     return this.httpService
-      .get('http://api.github.com/users', {
+      .get('', {
         params: {
           since,
         },
-        headers: this.getDefaultHeaders(),
       })
       .pipe(map(response => response.data));
   }
 
-  private getDefaultHeaders() {
-    return {
-      Authorization:
-        'Basic bWFyY29zLWFudG9uaW86Nzk1ZWU2ODkxOTUzZTlmMDcwNGYzMDZlN2FiOThiNGZkZTUwMTg0ZQ==',
-    };
+  getByLogin(login: string): Observable<GithubUser> {
+    return this.httpService.get(login).pipe(map(response => response.data));
   }
 }
