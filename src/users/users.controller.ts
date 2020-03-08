@@ -21,14 +21,18 @@ export class UsersController {
   getAll(@Req() request: Request, @Query('since') since?: number) {
     const users = this.service.getAll(since);
     const lastUserId = users.length > 0 ? users[users.length - 1].id : null;
-    request.res.setHeader('link', this.getLinkHeader(request.host, lastUserId));
+    request.res.status(HttpStatus.OK);
+    request.res.setHeader(
+      'link',
+      this.getLinkHeader(request.hostname, lastUserId),
+    );
     request.res.send(users);
   }
 
   private getLinkHeader(host: string, since?: number) {
     if (host === 'localhost') host += ':3001';
     if (!since) return `<${host}/users/(?since)>; rel="first"`;
-    return `<${host}/users?since=${since}; rel="next", <${host}/users/(?since)>; rel="first"`;
+    return `<${host}/users?since=${since}>; rel=next, <${host}/users/(?since)>; rel=first`;
   }
 
   @Get(':username/details')
