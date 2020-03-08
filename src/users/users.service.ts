@@ -2,27 +2,45 @@ import { Injectable } from '@nestjs/common';
 
 import { User } from './user';
 import { Repo } from '../repos/repo';
+import { GithubUserService } from '../github-user/githuber-user.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly githubUserService: GithubUserService) {}
+
   private usersList = [
     new User({
       id: 2,
       login: 'defunkt',
       htmlUrl: 'https://github.com/defunkt',
+      createdAt: '2011-01-25T18:44:36Z',
     }),
     new User({
       id: 3,
       login: 'pjhyett',
       htmlUrl: 'https://github.com/pjhyett',
+      createdAt: '2011-01-25T18:44:36Z',
     }),
-    new User({ id: 4, login: 'wycats', htmlUrl: 'https://github.com/wycats' }),
+    new User({
+      id: 4,
+      login: 'wycats',
+      htmlUrl: 'https://github.com/wycats',
+      createdAt: '2011-01-25T18:44:36Z',
+    }),
     new User({
       id: 5,
       login: 'ezmobius',
       htmlUrl: 'https://github.com/ezmobius',
+      createdAt: '2011-01-25T18:44:36Z',
     }),
-    new User({ id: 6, login: 'ivey', htmlUrl: 'https://github.com/ivey' }),
+    new User({
+      id: 6,
+      login: 'ivey',
+      htmlUrl: 'https://github.com/ivey',
+      createdAt: '2011-01-25T18:44:36Z',
+    }),
     new User({
       id: 17,
       login: 'vanpelt',
@@ -84,13 +102,14 @@ export class UsersService {
     }),
   ];
 
-  getAll(since?: number): User[] {
-    return this.usersList
-      .filter((u, i) => {
-        if (!since) return i <= 5;
-        return u.id > since;
-      })
-      .slice(0, 5);
+  getAll(since?: number): Observable<User[]> {
+    return this.githubUserService
+      .getAll(since ?? 0)
+      .pipe(
+        map(githubUsers =>
+          githubUsers.map(gu => User.constructFromGithubUser(gu)),
+        ),
+      );
   }
 
   getByLogin(login: string): User {

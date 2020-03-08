@@ -18,8 +18,8 @@ export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Get()
-  getAll(@Req() request: Request, @Query('since') since?: number) {
-    const users = this.service.getAll(since);
+  async getAll(@Req() request: Request, @Query('since') since?: number) {
+    const users = await this.service.getAll(since).toPromise();
     const lastUserId = users.length > 0 ? users[users.length - 1].id : null;
     request.res.status(HttpStatus.OK);
     request.res.setHeader(

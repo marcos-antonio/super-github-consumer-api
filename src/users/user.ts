@@ -1,3 +1,5 @@
+import { GithubUser } from '../github-user/githuber-user';
+
 export class User {
   constructor(user: Partial<User>) {
     this.id = user.id;
@@ -12,4 +14,14 @@ export class User {
   htmlUrl: string;
   avatarUrl: string;
   createdAt: string;
+
+  static constructFromGithubUser(githubUser: GithubUser): User {
+    const user = new User({});
+    user.id = githubUser.id;
+    user.login = githubUser.login;
+    user.avatarUrl = githubUser.avatar_url;
+    user.htmlUrl = githubUser.html_url;
+    user.createdAt = githubUser.created_at;
+    return user;
+  }
 }
