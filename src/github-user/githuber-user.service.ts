@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { GithubUser } from './githuber-user';
+import { GithubRepo } from '../github-repo/github-repo';
 
 @Injectable()
 export class GithubUserService {
@@ -20,5 +21,11 @@ export class GithubUserService {
 
   getByLogin(login: string): Observable<GithubUser> {
     return this.httpService.get(login).pipe(map(response => response.data));
+  }
+
+  getUserRepos(login: string): Observable<GithubRepo[]> {
+    return this.httpService
+      .get(`${login}/repos`)
+      .pipe(map(response => response.data));
   }
 }

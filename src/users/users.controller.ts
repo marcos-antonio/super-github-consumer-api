@@ -36,8 +36,8 @@ export class UsersController {
   }
 
   @Get(':username/details')
-  getUser(@Param('username') login: string): User {
-    const user = this.service.getByLogin(login);
+  async getUser(@Param('username') login: string): Promise<User> {
+    const user = await this.service.getByLogin(login).toPromise();
     if (!user)
       throw new HttpException(
         {
@@ -50,7 +50,7 @@ export class UsersController {
   }
 
   @Get(':username/repos')
-  getUserRepos(@Param('username') login: string): Repo[] {
-    return this.service.getUserRepos(login);
+  async getUserRepos(@Param('username') login: string): Promise<Repo[]> {
+    return await this.service.getUserRepos(login).toPromise();
   }
 }
