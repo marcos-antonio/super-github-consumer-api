@@ -35,6 +35,11 @@ export class UsersController {
     return `<${host}/users?since=${since}>; rel=next, <${host}/users/(?since)>; rel=first`;
   }
 
+  @Get('random')
+  getRandomNumber() {
+    return Math.floor(Math.random() * Math.floor(1000));
+  }
+
   @Get(':username/details')
   async getUser(@Param('username') login: string): Promise<User> {
     const user = await this.service.getByLogin(login).toPromise();
